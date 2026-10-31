@@ -42,8 +42,12 @@ pub enum CoordError {
 //   RowOutOfRange(11)     row 11 is off the board (1-10)
 // Study DataError in data.rs: it is a finished example of this impl.
 impl fmt::Display for CoordError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "TODO: {self:?}")
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CoordError::BadFormat => write!(f, "type a column letter and a row number, like B7"),
+            CoordError::ColumnOutOfRange(c) => write!(f, "column {} is off the board (A–J)", c),
+            CoordError::RowOutOfRange(r) => write!(f, "row {} is off the board (1–10)", r),
+        }
     }
 }
 
