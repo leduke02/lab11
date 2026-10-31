@@ -150,14 +150,14 @@ pub fn parse_ship_line(line: &str) -> Result<ShipSpec, ShipLineError> {
     }
     let name = parts[0].trim();
     if name.is_empty() {
-        return Err(ShipLineError::MissingComma);
+        return Err(ShipLineError::EmptyName);
     }
     let length = match parts[1].trim().parse::<usize>() {
         Ok(n) => n,
-        Err(_) => return Err(ShipLineError::MissingComma),
+        Err(_) => return Err(ShipLineError::BadLength(parts[1].trim().to_string())),
     };
     if length < MIN_SHIP || length > MAX_SHIP {
-        return Err(ShipLineError::MissingComma);
+        return Err(ShipLineError::LengthOutOfRange(length));
     }
     Ok(ShipSpec {
         name: name.to_string(),
