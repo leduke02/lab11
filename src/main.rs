@@ -14,7 +14,16 @@ fn main() {
     // "Error: could not load <path>: <message>" with eprintln! and call
     // std::process::exit(1). Then print each skipped line as
     // "<path> line <n>: <message>" with eprintln! and carry on.
-    let report = data::load_fleet(FLEET_PATH).unwrap();
+    let report = match data::load_fleet(FLEET_PATH) {
+        Ok(report) => report,
+        Err(e) => {
+            eprintln!("Error: could not load {}: {}", FLEET_PATH, e);
+            std::process::exit(1);
+        }
+    };
+    for (n, e) in &report.skipped {
+        eprintln!("{} line {}: {}", FLEET_PATH, n, e);
+    }
     let fleet = report.fleet;
     if fleet.is_empty() {
         println!("No fleet loaded. Check {FLEET_PATH}.");
