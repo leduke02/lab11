@@ -195,9 +195,13 @@ pub fn parse_coord(text: &str) -> Result<(usize, usize), CoordError> {
         Ok(n) => n,
         Err(_) => return Err(CoordError::BadFormat),
     };
-    let col = (first.to_ascii_uppercase() as usize) - ('A' as usize);
-    if col >= SIZE || row_number < 1 || row_number > SIZE {
-        return Err(CoordError::BadFormat);
+    let letter = first.to_ascii_uppercase();
+    let col = (letter as usize) - ('A' as usize);
+    if col >= SIZE {
+        return Err(CoordError::ColumnOutOfRange(letter));
+    }
+    if row_number < 1 || row_number > SIZE {
+        return Err(CoordError::RowOutOfRange(row_number));
     }
     Ok((row_number - 1, col))
 }
