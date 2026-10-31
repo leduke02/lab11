@@ -64,7 +64,17 @@ pub enum BoardError {
 // character or counts the variant carries, and use SIZE instead of typing 10.
 impl fmt::Display for BoardError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "TODO: {self:?}")
+        match self {
+            BoardError::WrongRowCount(n) => {
+                write!(f, "the board must have {} rows but has {}", SIZE, n)
+            }
+            BoardError::WrongRowWidth { line, found } => {
+                write!(f, "line {} has {} characters but every row needs {}", line, found, SIZE)
+            }
+            BoardError::BadChar { line, ch } => {
+                write!(f, "line {} has the character '{}' but only '.' and 'S' are allowed", line, ch)
+            }
+        }
     }
 }
 
