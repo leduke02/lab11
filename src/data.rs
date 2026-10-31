@@ -200,23 +200,27 @@ pub fn load_fleet(path: &str) -> Result<FleetReport, DataError> {
 pub fn parse_board(text: &str) -> Result<Board, BoardError> {
     let mut board = new_board();
     let mut row = 0;
-    for line in text.lines() {
+    for (index, line) in text.lines().enumerate() {
+        let line_number = index + 1;
         let line = line.trim();
         if line.is_empty() || line.starts_with('#') {
             continue;
         }
-        if row >= SIZE {
-            return Err(BoardError::WrongRowCount(row));
-        }
         let chars: Vec<char> = line.chars().collect();
         if chars.len() != SIZE {
-            return Err(BoardError::WrongRowCount(row));
+            return Err(BoardError::WrongRowWidth {
+                line: line_number,
+                found: chars.len(),
+            });
         }
         for col in 0..SIZE {
-            match chars[col] {
-                '.' => board[row][col] = Cell::Water,
-                'S' => board[row][col] = Cell::Ship,
-                _ => return Err(BoardError::WrongRowCount(row)),
+            let cell = match chars[col] {
+                '.' => Cell::Water,
+                'S' => Cell::Ship,
+                ch => return Err(BoardError::BadChar { line: line_number, ch }),
+            };
+            if row < SIZE {
+                board[row][col] = cell;
             }
         }
         row += 1;
