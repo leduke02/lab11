@@ -131,7 +131,7 @@ fn play_round(board: &mut Board) -> Option<u32> {
         }
         match board::parse_coord(&text) {
             // TODO (Task 9): show the CoordError message instead of this generic line.
-            Err(_) => println!("Enter a column A-J and a row 1-10, like B7."),
+            Err(e) => println!("{}", e),
             Ok((row, col)) => match board::fire(board, row, col) {
                 Shot::Hit => {
                     shots += 1;
