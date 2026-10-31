@@ -92,6 +92,10 @@ fn play_game(fleet: &[ShipSpec]) {
             let name = ui::prompt("Name for the high-score list: ");
             if !name.is_empty() {
                 let record = ScoreRecord { name, score };
+                match data::append_score(SCORES_PATH, &record) {
+                    Ok(()) => println!("Score saved."),
+                    Err(e) => println!("Could not save the score: {}", e),
+                }
                 // TODO (Task 9): when this fails, say why. Print
                 // "Could not save the score: <message>" and carry on.
                 if data::append_score(SCORES_PATH, &record).is_ok() {
