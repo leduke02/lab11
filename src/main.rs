@@ -54,7 +54,13 @@ fn show_top_scores(n: usize) {
     println!("TOP {n}");
     // TODO (Task 9): replace this unwrap. If the scores cannot be read, print
     // "  scores unavailable: <message>" and return. The game keeps running.
-    let mut records = data::load_scores(SCORES_PATH).unwrap();
+    let mut records = match data::load_scores(SCORES_PATH) {
+        Ok(records) => records,
+        Err(e) => {
+            println!("  scores unavailable: {}", e);
+            return;
+        }
+    };
     if records.is_empty() {
         println!("  no scores yet");
         return;
