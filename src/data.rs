@@ -37,7 +37,18 @@ pub enum ShipLineError {
 // Use MIN_SHIP and MAX_SHIP in the message instead of typing 2 and 5.
 impl fmt::Display for ShipLineError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "TODO: {self:?}")
+        match self {
+            ShipLineError::MissingComma => {
+                write!(f, "needs exactly one comma between the name and the length")
+            }
+            ShipLineError::EmptyName => write!(f, "has no ship name before the comma"),
+            ShipLineError::BadLength(text) => {
+                write!(f, "has a length '{}' that is not a number", text)
+            }
+            ShipLineError::LengthOutOfRange(n) => {
+                write!(f, "has length {}, outside {}-{}", n, MIN_SHIP, MAX_SHIP)
+            }
+        }
     }
 }
 
